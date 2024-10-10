@@ -13,7 +13,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
         with:
-          fetch-depth: 1
+          fetch-depth: 0  # Fetch full history to reset it later
 
       - name: Download EPG file
         run: |
@@ -28,12 +28,20 @@ jobs:
             echo "Failed to download the EPG file."
           fi
 
-      - name: Commit and push the EPG file (Squash Commit)
+      - name: Commit and force push without saving history
         run: |
           git config --global user.name "actions-user"
           git config --global user.email "actions@github.com"
+
+          # Clear the commit history by resetting to the first commit
+          FIRST_COMMIT=$(git rev-list --max-parents=0 HEAD)
+          git reset --soft $FIRST_COMMIT
+
+          # Stage and commit the changes
           git add epg.xml
-          git commit -m "Update EPG file"
-          git push --force-with-lease
+          git commit -m "Update EPG file" || echo "No changes to commit"
+
+          # Force push to overwrite history in the remote repository
+          git push -f
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
