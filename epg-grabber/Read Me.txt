@@ -1,0 +1,7 @@
+The getEpgs.py processes multiple Electronic Program Guide (EPG) files and creates a consolidated EPG, limiting the content 
+to only those channels specified in a tvg-ids.txt file. It fetches EPG files from given URLs, extracts their contents, filters 
+them based on the allowed TVG IDs, and saves the result in a single EPG XML file (epg.xml).
+
+The main objective of this script is to create a single, filtered EPG file that contains only the channels specified in 
+tvg-ids.txt. By doing so, it reduces the EPG size and ensures that only relevant channels are included, improving efficiency 
+and loading times for IPTV applications that use the generated EPG.
